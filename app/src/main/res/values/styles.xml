@@ -8,6 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-        <item name="blue1">@color/blue1</item>
-        <item name="blue2">@color/blue2</item>
 </resources>
