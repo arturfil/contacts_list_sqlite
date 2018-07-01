@@ -29,4 +29,10 @@ dependencies {
     //Design Library for Coordinator Layout and Toolbar
     compile 'com.android.support:design:27.1.1'
     compile 'com.android.support:appcompat-v7:27.1.1'
+
+    //Universal Image Loader
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    //Circle ImageView Library
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
