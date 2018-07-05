@@ -41,7 +41,7 @@
                 android:textSize="30sp"
                 android:textColor="@color/black"
                 android:layout_marginStart="30dp"
-                android:id="@+id/tvName"
+                android:id="@+id/contactName"
                 android:text="Arturo Filio"/>
 
             <ListView

@@ -27,6 +27,13 @@ public class ViewContactsFragment extends Fragment {
 
     private String testImageURL = "drawable://" + R.drawable.profile_pic ;
 
+    public interface OnContactSelectedListener {
+        public void OnContactSelected(Contact con);
+    }
+
+    OnContactSelectedListener mContactListener;
+
+    //variables and widgets
     private static final int STANDARD_APPBAR = 0;
     private static final int SEARCH_APPBAR = 1;
     private int mAppBarState;
@@ -77,8 +84,18 @@ public class ViewContactsFragment extends Fragment {
             }
         });
 
-
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mContactListener = (OnContactSelectedListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.e(TAG, "onAttach: ClassCastException" + e.getMessage() );
+        }
     }
 
     //
@@ -106,14 +123,9 @@ public class ViewContactsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onClick: navigating to" + getString(R.string.contact_fragment));
-                ContactFragment fragment = new ContactFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                // reaplce whatever is in the fragment_container view with this fragment,
-                // amd add the transaction to the back stack so the user can navigate back
-                transaction.replace(R.id.fragment_container, fragment);
-                transaction.addToBackStack(getString(R.string.edit_contact_fragment));
-                Log.d(TAG, "onClick: fragment" + getString(R.string.contact_fragment));
-                transaction.commit();
+
+                //pass the contact to the interface and send it to MainActivity.
+                mContactListener.OnContactSelected(contacts.get(position));
             }
         });
     }

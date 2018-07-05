@@ -15,23 +15,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.arturofilio.contact_app_sqlite.Utils.UniversalImageLoader;
+import com.arturofilio.contact_app_sqlite.models.Contact;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactFragment extends Fragment {
 
     private static final String TAG = "ContactFragment";
 
+    //This will evade the nullpointer exception when adding to a new bundle from MainActivity
+    public ContactFragment(){
+        super();
+        setArguments(new Bundle());
+    }
+
     private Toolbar toolbar;
+    private Contact mContact;
+    private TextView mContactName;
+    private CircleImageView mContactImage;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.contactToolbar);
+        mContactName = (TextView) view.findViewById(R.id.contactName);
+        mContactImage = (CircleImageView) view.findViewById(R.id.contactImage);
         Log.d(TAG, "onCreateView: started");
+        mContact = getContactFromBundle();
 
         //setting up the toolbar
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
+
+        init();
 
         //navigation for the back-arrow
         ImageView ivBackArrow = (ImageView) view.findViewById(R.id.ivBackArrow);
@@ -50,23 +70,22 @@ public class ContactFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked the edit icon");
-                EditContactFragment fragment = new EditContactFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                // reaplce whatever is in the fragment_container view with this fragment,
-                // amd add the transaction to the back stack so the user can navigate back
-                transaction.replace(R.id.fragment_container, fragment);
-                transaction.addToBackStack(getString(R.string.edit_contact_fragment));
-                Log.d(TAG, "onClick: fragment" + getString(R.string.edit_contact_fragment));
-                transaction.commit();
+
             }
         });
 
         return view;
     }
 
+    private void init() {
+        mContactName.setText(mContact.getName());
+
+        UniversalImageLoader.setImage(mContact.getProfileImage(), mContactImage, null, "");
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.contact_menu, menu);
+         inflater.inflate(R.menu.contact_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -78,5 +97,16 @@ public class ContactFragment extends Fragment {
                 Log.d(TAG, "onOptionsItemSelected: deleting content ");
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Contact getContactFromBundle(){
+        Log.d(TAG, "getContactFromBundle: argumetns" + getArguments());
+
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            return bundle.getParcelable(getString(R.string.contact));
+        } else {
+            return null;
+        }
     }
 }
