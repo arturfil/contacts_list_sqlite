@@ -47,7 +47,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/tvName"
+                android:layout_below="@+id/contactName"
                 android:id="@+id/lvContactProperties">
             </ListView>
 

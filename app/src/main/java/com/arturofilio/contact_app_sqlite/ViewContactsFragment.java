@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.arturofilio.contact_app_sqlite.Utils.CustomListAdapter;
+import com.arturofilio.contact_app_sqlite.Utils.ContactListAdapter;
 import com.arturofilio.contact_app_sqlite.models.Contact;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class ViewContactsFragment extends Fragment {
 
 
     private AppBarLayout viewContactsBar, searchBar;
-    private CustomListAdapter adapter;
+    private ContactListAdapter adapter;
     private ListView contactsList;
 
     @Nullable
@@ -101,22 +100,23 @@ public class ViewContactsFragment extends Fragment {
     //
     private void setupContactsList(){
         final ArrayList<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(604) 855-1111", "Mobile","mitch@tabian.ca", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
 
-        adapter = new CustomListAdapter(getActivity(), R.layout.layout_contactslistitem, contacts, "");
+        adapter = new ContactListAdapter(getActivity(), R.layout.layout_contactslistitem, contacts, "");
         contactsList.setAdapter(adapter);
 
         contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
