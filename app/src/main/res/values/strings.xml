@@ -9,4 +9,12 @@
     <!--keys-->
     <string name="contact">Contact</string>
 
+    <string-array name="device_options">
+        <item>Mobile</item>
+        <item>Home</item>
+        <item>Work</item>
+        <item>Pager</item>
+        <item>Home</item>
+    </string-array>
+
 </resources>
