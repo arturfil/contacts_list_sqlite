@@ -1,5 +1,6 @@
 package com.arturofilio.contact_app_sqlite;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ContactFragment extends Fragment {
 
     private static final String TAG = "ContactFragment";
+
+    public interface OnEditContactListener{
+        public void onEditcontactSelected(Contact contact);
+    }
+
+    OnEditContactListener mOnEditContactListener;
 
     //This will evade the nullpointer exception when adding to a new bundle from MainActivity
     public ContactFragment(){
@@ -76,6 +83,7 @@ public class ContactFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked the edit icon");
+                mOnEditContactListener.onEditcontactSelected(mContact);
 
             }
         });
@@ -112,6 +120,10 @@ public class ContactFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Retrieves the selected contact from the bundle (coming from MainActivity)
+     * @return
+     */
     private Contact getContactFromBundle(){
         Log.d(TAG, "getContactFromBundle: argumetns" + getArguments());
 
@@ -120,6 +132,17 @@ public class ContactFragment extends Fragment {
             return bundle.getParcelable(getString(R.string.contact));
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mOnEditContactListener = (OnEditContactListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.d(TAG, "onAttach: ClassCAstException " + e.getMessage());
         }
     }
 }
