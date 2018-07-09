@@ -6,12 +6,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -19,6 +22,7 @@ import com.arturofilio.contact_app_sqlite.Utils.ContactListAdapter;
 import com.arturofilio.contact_app_sqlite.models.Contact;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ViewContactsFragment extends Fragment {
 
@@ -47,6 +51,7 @@ public class ViewContactsFragment extends Fragment {
     private AppBarLayout viewContactsBar, searchBar;
     private ContactListAdapter adapter;
     private ListView contactsList;
+    private EditText mSearchContacts;
 
     @Nullable
     @Override
@@ -55,6 +60,7 @@ public class ViewContactsFragment extends Fragment {
         viewContactsBar = (AppBarLayout) view.findViewById(R.id.viewContactsToolbar);
         searchBar = (AppBarLayout) view.findViewById(R.id.searchToolbar);
         contactsList = (ListView) view.findViewById(R.id.contactsList);
+        mSearchContacts = (EditText) view.findViewById(R.id.etSearchContacts);
         Log.d(TAG, "onCreateView: started.");
 
 
@@ -108,7 +114,7 @@ public class ViewContactsFragment extends Fragment {
     //
     private void setupContactsList(){
         final ArrayList<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+        contacts.add(new Contact("Arturo Filio", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
         contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
         contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
         contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
@@ -125,6 +131,25 @@ public class ViewContactsFragment extends Fragment {
         contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
 
         adapter = new ContactListAdapter(getActivity(), R.layout.layout_contactslistitem, contacts, "");
+
+        mSearchContacts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String text = mSearchContacts.getText().toString().toLowerCase(Locale.getDefault());
+                adapter.filter(text);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         contactsList.setAdapter(adapter);
 
         contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
