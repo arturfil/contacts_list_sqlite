@@ -1,6 +1,7 @@
 package com.arturofilio.contact_app_sqlite;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -13,9 +14,12 @@ import com.arturofilio.contact_app_sqlite.Utils.UniversalImageLoader;
 import com.arturofilio.contact_app_sqlite.models.Contact;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.ByteArrayOutputStream;
+
 public class MainActivity extends AppCompatActivity implements
         ViewContactsFragment.OnContactSelectedListener,
-        ContactFragment.OnEditContactListener {
+        ContactFragment.OnEditContactListener,
+        ViewContactsFragment.OnAddContactListener {
 
     private static final String TAG = "MainActivity";
 
@@ -53,6 +57,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onAddContact() {
+        Log.d(TAG, "onAddContact: navigating to " + getString(R.string.add_contact_fragment));
+        
+        AddContactFragment fragment = new AddContactFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(getString(R.string.add_contact_fragment));
+        transaction.commit(); 
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -81,6 +97,19 @@ public class MainActivity extends AppCompatActivity implements
     private void initImageLoader(){
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(MainActivity.this);
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
+    /**
+     * Compress a bitmap by the @param "quality"
+     * Quality can be anywhere from 1-100 : 100 being highest quality.
+     * @param bitmap
+     * @param quality
+     * @return
+     */
+    public Bitmap compressBitmap(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        return bitmap;
     }
 
     /**

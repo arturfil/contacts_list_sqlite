@@ -84,7 +84,6 @@ public class ContactFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked the edit icon");
                 mOnEditContactListener.onEditcontactSelected(mContact);
-
             }
         });
 
