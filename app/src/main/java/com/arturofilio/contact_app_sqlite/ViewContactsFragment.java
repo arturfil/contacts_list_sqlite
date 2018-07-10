@@ -1,6 +1,7 @@
 package com.arturofilio.contact_app_sqlite;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,11 +18,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.arturofilio.contact_app_sqlite.Utils.ContactListAdapter;
+import com.arturofilio.contact_app_sqlite.Utils.DatabaseHelper;
 import com.arturofilio.contact_app_sqlite.models.Contact;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class ViewContactsFragment extends Fragment {
@@ -114,21 +119,47 @@ public class ViewContactsFragment extends Fragment {
     //
     private void setupContactsList(){
         final ArrayList<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact("Arturo Filio", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
-        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Arturo Filio", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+//        contacts.add(new Contact("Chucky Lozano", "(305) 535-2353", "Mobile","arturfil@hotmail.com", testImageURL));
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
+        Cursor cursor = databaseHelper.getAllContacts();
+
+        if(!cursor.moveToNext()) {
+            Toast.makeText(getActivity(), "There are no contacts to show", Toast.LENGTH_SHORT).show();
+        }
+
+        //iterate through all the rows contained in the database
+        while(cursor.moveToNext()) {
+            contacts.add(new Contact(
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5)
+            ));
+        }
+
+        //sort the arrayList based on the contact name
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact o1, Contact o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
 
         adapter = new ContactListAdapter(getActivity(), R.layout.layout_contactslistitem, contacts, "");
 

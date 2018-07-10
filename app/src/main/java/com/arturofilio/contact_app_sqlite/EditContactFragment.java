@@ -1,5 +1,6 @@
 package com.arturofilio.contact_app_sqlite;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,8 +23,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arturofilio.contact_app_sqlite.Utils.ChangePhotoDialog;
+import com.arturofilio.contact_app_sqlite.Utils.DatabaseHelper;
 import com.arturofilio.contact_app_sqlite.Utils.Init;
 import com.arturofilio.contact_app_sqlite.Utils.UniversalImageLoader;
 import com.arturofilio.contact_app_sqlite.models.Contact;
@@ -95,6 +98,33 @@ public class EditContactFragment extends Fragment implements ChangePhotoDialog.O
             public void onClick(View v) {
                 Log.d(TAG, "onClick: saving the edited contact");
                 //execute the save method for the database
+
+                if(checkStringIfNull(mName.getText().toString())) {
+                    Log.d(TAG, "onClick: saving changes to the contact: " + mName.getText().toString());
+
+                    //get the database helper and save the contact
+                    DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
+                    Cursor cursor = databaseHelper.getContactID(mContact);
+
+                    int contactID = -1;
+                    while(cursor.moveToNext()) {
+                        contactID = cursor.getInt(0);
+                    }
+                    if(contactID > -1 ){
+                        if(mSelectedPath != null) {
+                            mContact.setProfileImage(mSelectedPath);
+                        }
+                        mContact.setName(mName.getText().toString());
+                        mContact.setPhonenumber(mPhoneNumber.getText().toString());
+                        mContact.setDevice(mSelectDevice.getSelectedItem().toString());
+                        mContact.setEmail(mEmail.getText().toString());
+
+                        databaseHelper.updateContact(mContact, contactID);
+                        Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Failed to Update Contact", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -124,6 +154,14 @@ public class EditContactFragment extends Fragment implements ChangePhotoDialog.O
         });
 
         return view;
+    }
+
+    private boolean checkStringIfNull(String string) {
+        if(string.equals("")) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void init() {

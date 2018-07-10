@@ -20,8 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arturofilio.contact_app_sqlite.Utils.ChangePhotoDialog;
+import com.arturofilio.contact_app_sqlite.Utils.DatabaseHelper;
 import com.arturofilio.contact_app_sqlite.Utils.Init;
 import com.arturofilio.contact_app_sqlite.Utils.UniversalImageLoader;
 import com.arturofilio.contact_app_sqlite.models.Contact;
@@ -78,16 +80,6 @@ public class AddContactFragment extends Fragment implements ChangePhotoDialog.On
             }
         });
 
-        // save new contact
-        ImageView ivCheckMark = (ImageView) view.findViewById(R.id.ivCheckMark);
-        ivCheckMark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: saving new contact");
-                //execute the save method for the database
-            }
-        });
-
         // initiate the dialog box or choosing an image
         ImageView ivCamera = (ImageView) view.findViewById(R.id.ivCamera);
         ivCamera.setOnClickListener(new View.OnClickListener() {
@@ -113,9 +105,44 @@ public class AddContactFragment extends Fragment implements ChangePhotoDialog.On
             }
         });
 
+        //set onClickListener to the 'check mark' icon for saving a contact
+        ImageView confirmNewContact = (ImageView) view.findViewById(R.id.ivCheckMark);
+        confirmNewContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: attempting to save new contact.");
+                if(checkStringIfNull(mName.getText().toString())){
+                    Log.d(TAG, "onClick: savig new contact " + mName.getText().toString());
+
+                    DatabaseHelper databaseHelper = new DatabaseHelper((getActivity()));
+                    Contact contact = new Contact(
+                            mName.getText().toString(),
+                            mPhoneNumber.getText().toString(),
+                            mSelectDevice.getSelectedItem().toString(),
+                            mEmail.getText().toString(),
+                            mSelectedPath);
+
+                    if(databaseHelper.addContact(contact)) {
+                        Toast.makeText(getActivity(), "Contact Saved", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    } else {
+                        Toast.makeText(getActivity(), "Saving Attempt Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
         initOnTextChangeListener();
 
         return view;
+    }
+
+    private boolean checkStringIfNull(String string) {
+        if(string.equals("")){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
